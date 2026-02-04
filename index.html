@@ -96,9 +96,6 @@ p {
 
 /* ---------- BUTTONS ---------- */
 .buttons {
-  display: flex;
-  justify-content: center;
-  gap: 22px;
   position: relative;
   height: 60px;
 }
@@ -110,17 +107,19 @@ button {
   border: none;
   cursor: pointer;
   font-weight: 600;
+  position: absolute;
 }
 
 #yes {
+  left: 0;
   background: linear-gradient(135deg, #ff4fd8, #ff2e5f);
   color: white;
 }
 
 #no {
+  right: 0;
   background: rgba(255,255,255,.15);
   color: #fff;
-  position: absolute;
 }
 
 /* ---------- SLIDESHOW ---------- */
@@ -147,8 +146,10 @@ button {
   opacity: 1;
 }
 
-/* ---------- PAGE VISIBILITY ---------- */
-.hidden { display: none; }
+/* ---------- VISIBILITY ---------- */
+.hidden {
+  display: none;
+}
 </style>
 </head>
 
@@ -216,13 +217,15 @@ const noBtn  = document.getElementById("no");
 const page1  = document.getElementById("page1");
 const page2  = document.getElementById("page2");
 
-/* No button moves */
 noBtn.addEventListener("mouseenter", () => {
-  noBtn.style.left = Math.random() * 140 + "px";
-  noBtn.style.top  = Math.random() * 30 + "px";
+  const container = noBtn.parentElement;
+  const maxX = container.clientWidth - noBtn.offsetWidth;
+  const maxY = container.clientHeight - noBtn.offsetHeight;
+
+  noBtn.style.left = Math.random() * maxX + "px";
+  noBtn.style.top  = Math.random() * maxY + "px";
 });
 
-/* Yes button */
 yesBtn.addEventListener("click", () => {
   page1.classList.add("hidden");
   page2.classList.remove("hidden");
