@@ -1,1 +1,289 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Valentine’s Day</title>
+  <style>
+    :root{
+      --bg1:#0b0b14; --bg2:#22061a;
+      --card: rgba(255,255,255,.08);
+      --stroke: rgba(255,255,255,.16);
+      --txt:#fff; --muted: rgba(255,255,255,.78);
+      --pink:#ff4fd8; --red:#ff2e5f; --gold:#ffd1dc;
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      min-height:100svh;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--txt);
+      background:
+        radial-gradient(1200px 700px at 20% 10%, #3a0b2a 0%, transparent 55%),
+        radial-gradient(900px 600px at 90% 30%, #2b163e 0%, transparent 60%),
+        linear-gradient(160deg, var(--bg2), var(--bg1));
+      overflow-x:hidden;
+    }
+    .wrap{ max-width:980px; margin:0 auto; padding:22px 16px 56px; }
+    header{ display:flex; justify-content:space-between; align-items:center; gap:12px; }
+    .badge{
+      display:inline-flex; gap:8px; align-items:center;
+      padding:8px 12px; border-radius:999px;
+      background: var(--card);
+      border:1px solid var(--stroke);
+      backdrop-filter: blur(10px);
+      font-size:12px; color:var(--muted);
+    }
+    .heart{ width:10px; height:10px; background:var(--red); transform: rotate(45deg); border-radius:2px; }
+    .heart:before,.heart:after{
+      content:""; position:absolute; width:10px; height:10px; background:var(--red);
+      border-radius:999px;
+    }
+    .heart{ position:relative; }
+    .heart:before{ left:-5px; top:0; }
+    .heart:after{ left:0; top:-5px; }
 
+    .hero{
+      margin-top:18px;
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:14px;
+      align-items:stretch;
+    }
+    .card{
+      background: var(--card);
+      border:1px solid var(--stroke);
+      border-radius:18px;
+      padding:18px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 18px 60px rgba(0,0,0,.35);
+      position:relative;
+      overflow:hidden;
+    }
+    h1{ margin:0 0 8px; font-size: clamp(30px, 4vw, 52px); line-height:1.05; }
+    p{ margin:10px 0; color:var(--muted); }
+    .ctaRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
+    button{
+      appearance:none; border:1px solid var(--stroke);
+      background: rgba(0,0,0,.25);
+      color: var(--txt);
+      padding:10px 14px; border-radius:12px;
+      cursor:pointer;
+      font-weight:650;
+    }
+    button.primary{
+      background: linear-gradient(135deg, rgba(255,79,216,.35), rgba(255,46,95,.25));
+      border-color: rgba(255,79,216,.5);
+    }
+    button:active{ transform: translateY(1px); }
+
+    .bigLove{
+      font-size: 70px;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--pink), var(--gold));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      margin: 8px 0 0;
+      letter-spacing:-1px;
+    }
+    .note{
+      display:grid; gap:10px;
+    }
+    .noteBox{
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px dashed rgba(255,255,255,.22);
+      background: rgba(0,0,0,.18);
+      color: var(--muted);
+    }
+
+    /* Floating hearts */
+    .floaters{ position:fixed; inset:0; pointer-events:none; overflow:hidden; }
+    .fHeart{
+      position:absolute;
+      width:12px; height:12px;
+      background: rgba(255,46,95,.85);
+      transform: rotate(45deg);
+      border-radius:2px;
+      filter: drop-shadow(0 8px 14px rgba(0,0,0,.35));
+      animation: rise linear infinite;
+    }
+    .fHeart:before,.fHeart:after{
+      content:""; position:absolute; width:12px; height:12px; background: inherit;
+      border-radius:999px;
+    }
+    .fHeart:before{ left:-6px; top:0; }
+    .fHeart:after{ left:0; top:-6px; }
+    @keyframes rise{
+      from{ transform: translateY(30px) rotate(45deg); opacity:0; }
+      10%{ opacity:1; }
+      to{ transform: translateY(-120svh) rotate(45deg); opacity:0; }
+    }
+
+    /* Modal */
+    dialog{
+      width:min(560px, calc(100% - 24px));
+      border:none;
+      border-radius:18px;
+      padding:0;
+      background: rgba(20,10,25,.92);
+      color: var(--txt);
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow: 0 30px 90px rgba(0,0,0,.6);
+    }
+    dialog::backdrop{ background: rgba(0,0,0,.55); }
+    .modalBody{ padding:18px; }
+    .modalTop{ display:flex; justify-content:space-between; align-items:center; gap:10px; }
+    .modalTop h2{ margin:0; font-size:18px; }
+    .x{ border-radius:12px; padding:8px 10px; }
+    .grid{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:10px;
+    }
+    .choice{
+      text-align:center;
+      padding:12px 10px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.22);
+    }
+    .choice b{ display:block; margin-top:6px; }
+    .result{
+      margin-top:12px;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid rgba(255,79,216,.35);
+      background: rgba(255,79,216,.10);
+      color: var(--muted);
+      min-height: 54px;
+    }
+
+    @media (max-width: 860px){
+      .hero{ grid-template-columns: 1fr; }
+      .grid{ grid-template-columns: 1fr; }
+      .bigLove{ font-size: 58px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="floaters" id="floaters" aria-hidden="true"></div>
+
+  <div class="wrap">
+    <header>
+      <div class="badge"><span class="heart"></span> Valentine’s Day</div>
+      <div class="badge">Made for <span id="forName">Your Person</span></div>
+    </header>
+
+    <section class="hero">
+      <div class="card">
+        <h1>Hey <span id="theirName">Love</span>,</h1>
+        <p>Happy Valentine’s Day. I made a tiny website just to say you matter to me.</p>
+        <div class="bigLove">I ❤️ You</div>
+        <p id="line2">Today and always.</p>
+
+        <div class="ctaRow">
+          <button class="primary" id="openBtn" type="button">Open the surprise</button>
+          <button id="toggleHearts" type="button">More hearts</button>
+          <button id="editBtn" type="button">Edit names</button>
+        </div>
+      </div>
+
+      <div class="card note">
+        <h2 style="margin:0;font-size:18px;">A note</h2>
+        <div class="noteBox" id="noteBox">
+          I love the way you laugh, the way you care, and the way you make ordinary days feel special.
+        </div>
+        <div class="noteBox">
+          Tip: Share this page as a link, or host it free on GitHub Pages / Netlify.
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <dialog id="modal">
+    <div class="modalBody">
+      <div class="modalTop">
+        <h2>Choose your Valentine surprise</h2>
+        <button class="x" id="closeBtn" type="button">Close</button>
+      </div>
+
+      <div class="grid">
+        <button class="choice" data-msg="A movie night—your pick, my treat. 🍿">
+          🎬 <b>Movie</b>
+        </button>
+        <button class="choice" data-msg="Dinner date + dessert, and no phones. 🍰">
+          🍝 <b>Dinner</b>
+        </button>
+        <button class="choice" data-msg="A long walk + your favorite warm drink. ☕">
+          🌙 <b>Walk</b>
+        </button>
+      </div>
+
+      <div class="result" id="result">Pick one above.</div>
+    </div>
+  </dialog>
+
+  <script>
+    const floaters = document.getElementById('floaters');
+    const modal = document.getElementById('modal');
+    const result = document.getElementById('result');
+
+    const theirName = document.getElementById('theirName');
+    const forName = document.getElementById('forName');
+
+    let heartsOn = true;
+    let heartCount = 16;
+
+    function addHearts(n){
+      floaters.innerHTML = "";
+      const w = window.innerWidth;
+      for(let i=0;i<n;i++){
+        const h = document.createElement('div');
+        h.className = 'fHeart';
+        const left = Math.random() * w;
+        const size = 8 + Math.random() * 18;
+        const dur = 4 + Math.random() * 6;
+        const delay = Math.random() * 4;
+        h.style.left = left + "px";
+        h.style.bottom = (-20 - Math.random()*80) + "px";
+        h.style.width = size + "px";
+        h.style.height = size + "px";
+        h.style.animationDuration = dur + "s";
+        h.style.animationDelay = delay + "s";
+        h.style.opacity = .6 + Math.random() * .4;
+        floaters.appendChild(h);
+      }
+    }
+
+    addHearts(heartCount);
+
+    document.getElementById('openBtn').addEventListener('click', () => modal.showModal());
+    document.getElementById('closeBtn').addEventListener('click', () => modal.close());
+
+    document.querySelectorAll('.choice').forEach(btn => {
+      btn.addEventListener('click', () => {
+        result.textContent = btn.getAttribute('data-msg');
+      });
+    });
+
+    document.getElementById('toggleHearts').addEventListener('click', () => {
+      heartsOn = !heartsOn;
+      if(!heartsOn){ floaters.innerHTML = ""; return; }
+      heartCount = Math.min(40, heartCount + 10);
+      addHearts(heartCount);
+    });
+
+    document.getElementById('editBtn').addEventListener('click', () => {
+      const a = prompt("Their name?", theirName.textContent) || theirName.textContent;
+      const b = prompt("Display name (top right)?", forName.textContent) || forName.textContent;
+      theirName.textContent = a;
+      forName.textContent = b;
+    });
+
+    window.addEventListener('resize', () => { if(heartsOn) addHearts(heartCount); });
+  </script>
+</body>
+</html>
